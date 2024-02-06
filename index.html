@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Validation</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .password-container {
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    label {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    input {
+      padding: 5px;
+      margin-right: 20px;
+      color: white; /* Setting text color for input boxes */
+      background-color: black; /* Reset background color */
+      border: 1px solid white; /* Adding white border for better visibility */
+    }
+
+    button {
+      padding: 8px 15px;
+      background-color: black; /* Set button background color to match the page */
+      color: white;
+      cursor: pointer;
+      margin-right: 20px;
+    }
+
+    button:hover {
+      background-color: white;
+      color: black;
+    }
+
+    .validation-message {
+      margin-bottom: 20px;
+      color: white; /* Setting text color for validation confirmation */
+    }
+  </style>
+</head>
+<body>
+  <p id="validation-message-0" class="validation-message"></p>
+  <div class="password-container">
+    <label for="gen4">GEN 4:</label>
+    <input id="gen4" name="gen4" required>
+    <button type="button" onclick="validatePassword('gen4')">ENTER</button>
+  </div>
+
+  <p id="validation-message-1" class="validation-message"></p>
+  <div class="password-container">
+    <label for="gen5">GEN 5:</label>
+    <input id="gen5" name="gen5" required>
+    <button type="button" onclick="validatePassword('gen5')">ENTER</button>
+  </div>
+
+  <p id="validation-message-2" class="validation-message"></p>
+  <div class="password-container">
+    <label for="gen6">GEN 6:</label>
+    <input id="gen6" name="gen6" required>
+    <button type="button" onclick="validatePassword('gen6')">ENTER</button>
+  </div>
+
+  <p id="validation-message-3" class="validation-message"></p>
+  <div class="password-container">
+    <label for="gen7">GEN 7:</label>
+    <input id="gen7" name="gen7" required>
+    <button type="button" onclick="validatePassword('gen7')">ENTER</button>
+  </div>
+
+  <p id="validation-message-4" class="validation-message"></p>
+  <div class="password-container">
+    <label for="gen8">GEN 8:</label>
+    <input id="gen8" name="gen8" required>
+    <button type="button" onclick="validatePassword('gen8')">ENTER</button>
+  </div>
+
+  <script>
+    console.log(`
+IN THIS WORLD IT'S MAN VS MACHINE AND THE MACHINE WILL ALWAYS WIN
+
+ .-._                                                   _,-,
+  \`._\`-._                                           _,-'_,'
+     \`._ \`-._                                   _,-' _,'
+        \`._  \`-._        __.-----.__        _,-'  _,'
+           \`._   \`#==="""           """===#'   _,'
+              \`._/)  ._               _.  (\_,'
+               )*'     **.__     __.**     '*( 
+               #  .==..__  ""   ""  __..==,  # 
+               #   \`"._(_).       .(_)_."'   #
+    `)
+
+    async function sha256(source) {
+        const sourceBytes = new TextEncoder().encode(source);
+        const digest = await crypto.subtle.digest("SHA-256", sourceBytes);
+        const resultBytes = [...new Uint8Array(digest)];
+        return resultBytes.map(x => x.toString(16).padStart(2, '0')).join("");
+    }
+
+    async function validatePassword(genId) {
+        // Get the password value for the specific GEN
+        let passwordInput = document.getElementById(genId);
+        let password = passwordInput.value;
+        let hash = await sha256(password);
+        console.log(hash)
+
+        // Define unique passwords for each GEN
+        let genPasswords = {
+            gen4: '3b89b2a8b8a6f905e11e5c091e28360d407a5751fa3a2b353be2fad9cab07949',
+            gen5: 'a961e5b0d27b0825ad1d1dedd76be6e1d96660e83e1511030c507abb076f734e',
+            gen6: '57cb199b3e70ce3b55a7d49352d4c23cb803f231dcc7fc70e6cbb536ef258f5a',
+            gen7: 'd64b1afe65253e88c0f621960a494e4cb5546e968ad1a4ba6242e1abbb564f0a',
+            gen8: '59519641c7932638b3b2e5ba204b6c7d51fa6d55626cac63818b654fb5d71205'
+        };
+        
+        let successmessage = {
+            gen4: 'tinyurl.com/genixsunhooESCAPE4chain',
+            gen5: 'tinyurl.com/genixsunhooVALID5yes',
+            gen6: 'tinyurl.com/genixsunhooLIGHT6flash',
+            gen7: 'tinyurl.com/genixsunhooHOME7maison',
+            gen8: 'tinyurl.com/genixsunhooMACHINE8success'
+        }
+        const correct = hash === genPasswords[genId];
+        const idx = Object.keys(genPasswords).findIndex((val) => val === genId);
+        // Check if the entered password is correct for the specific GEN
+        console.log(`validation-message-${idx}`);
+        document.getElementById(`validation-message-${idx}`).innerText = correct ? successmessage [genId] : 'Password is incorrect. Please try again.';
+        passwordInput.style.backgroundColor = correct ? 'green' : 'red';
+    }
+  </script>
+</body>
+</html>
